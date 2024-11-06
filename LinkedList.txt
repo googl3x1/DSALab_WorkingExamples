@@ -1,0 +1,60 @@
+class Node {
+    int data;
+    Node address;
+
+   
+    public Node(int data) {
+        this.data = data;
+        this.address = null;
+    }
+}
+
+public class LinkedList {
+    private Node head, tail;
+    private int size;
+
+  
+    public LinkedList() {
+        head = tail = null;
+        size = 0;
+    }
+
+   
+    public void add(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            
+            head = tail = newNode;
+        } else {
+           
+            tail.address = newNode;
+            tail = newNode;
+        }
+        size++;
+    }
+
+  
+    public static void main(String[] args) {
+        LinkedList list = new LinkedList();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+        list.add(5);
+        list.add(6);
+
+       
+        list.printList();
+       
+       System.out.println("The size of LinkedList is:" +list.size);
+    }
+
+    public void printList() {
+        Node current = head;
+        while (current != null) {
+            System.out.println(current.data + " ");
+            current = current.address;
+        }
+    }
+}
+ 
