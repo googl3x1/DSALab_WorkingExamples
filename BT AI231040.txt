@@ -1,0 +1,175 @@
+class Node {
+    int key;
+    Node left, right;
+
+    // Constructor for Node class
+    public Node(int item) {
+        key = item;
+        left = right = null;
+    }
+}
+
+public class Main {  // Changed class name to 'Main'
+    Node root;
+
+    // Constructor for BST class
+    public Main(int key) {
+        root = new Node(key);  // Create root with given key
+    }
+
+    // Default constructor for BST class
+    public Main() {
+        root = null;  // Empty tree
+    }
+
+    // Method to print nodes in Post-order traversal
+    void printPostorder(Node node) {
+        if (node == null) return;
+
+        // First recur on left subtree
+        printPostorder(node.left);
+
+        // Then recur on right subtree
+        printPostorder(node.right);
+
+        // Now deal with the node
+        System.out.print(node.key + " ");
+    }
+
+    // Method to print nodes in In-order traversal
+    void printInorder(Node node) {
+        if (node == null) return;
+
+        // First recur on left subtree
+        printInorder(node.left);
+
+        // Then print the data of node
+        System.out.print(node.key + " ");
+
+        // Now recur on right subtree
+        printInorder(node.right);
+    }
+
+    // Method to print nodes in Pre-order traversal
+    void printPreorder(Node node) {
+        if (node == null) return;
+
+        // First print data of node
+        System.out.print(node.key + " ");
+
+        // Then recur on left subtree
+        printPreorder(node.left);
+
+        // Now recur on right subtree
+        printPreorder(node.right);
+    }
+
+    // Search for a key in the BST
+    public Node search(Node root, int key) {
+        // Base cases: root is null or key is present at the root
+        if (root == null || root.key == key) return root;
+
+        // If key is smaller than root's key, search in the left subtree
+        if (key < root.key) return search(root.left, key);
+
+        // Otherwise, search in the right subtree
+        return search(root.right, key);
+    }
+
+    // Insert a key in the BST
+    public Node insertRec(Node root, int key) {
+        // If the tree is empty, return a new node
+        if (root == null) {
+            root = new Node(key);
+            return root;
+        }
+
+        // Otherwise, recur down the tree
+        if (key < root.key) {
+            root.left = insertRec(root.left, key);
+        } else if (key > root.key) {
+            root.right = insertRec(root.right, key);
+        }
+
+        // Return the (unchanged) node pointer
+        return root;
+    }
+
+    // Delete a key from the BST
+    public Node deleteRec(Node root, int key) {
+        // Base case: if the tree is empty
+        if (root == null) return root;
+
+        // Otherwise, recur down the tree
+        if (key < root.key) {
+            root.left = deleteRec(root.left, key);
+        } else if (key > root.key) {
+            root.right = deleteRec(root.right, key);
+        } else {
+            // If key is the same as root's key, then this is the node to be deleted
+
+            // Node with only one child or no child
+            if (root.left == null) return root.right;
+            else if (root.right == null) return root.left;
+
+            // Node with two children: Get the inorder successor (smallest in the right subtree)
+            root.key = minValue(root.right);
+
+            // Delete the inorder successor
+            root.right = deleteRec(root.right, root.key);
+        }
+        return root;
+    }
+
+    // Get the minimum value node in the BST
+    public int minValue(Node root) {
+        int minValue = root.key;
+        while (root.left != null) {
+            minValue = root.left.key;
+            root = root.left;
+        }
+        return minValue;
+    }
+
+    // Main method to test the BST
+    public static void main(String[] args) {
+        // Create a BST and add nodes
+        Main tree = new Main(8);  // Create root with key 8
+        tree.root.left = new Node(3);
+        tree.root.right = new Node(10);
+        tree.root.left.left = new Node(1);
+        tree.root.left.right = new Node(6);
+        tree.root.right.left = new Node(9);
+        tree.root.right.right = new Node(14);
+
+        System.out.println("Pre-Order:");
+        tree.printPreorder(tree.root);
+
+        System.out.println("\nPost-Order:");
+        tree.printPostorder(tree.root);
+
+        System.out.println("\nIn-Order:");
+        tree.printInorder(tree.root);
+
+        // Search for a value in the BST
+        int searchKey = 6;
+        Node result = tree.search(tree.root, searchKey);
+        if (result != null) {
+            System.out.println("\nNode with key " + searchKey + " found.");
+        } else {
+            System.out.println("\nNode with key " + searchKey + " not found.");
+        }
+
+        // Insert a new value
+        int newKey = 7;
+        tree.insertRec(tree.root, newKey);
+        System.out.println("\nAfter Inserting " + newKey + ":");
+        tree.printInorder(tree.root);
+
+        // Delete a node
+        int deleteKey = 10;
+        tree.deleteRec(tree.root, deleteKey);
+        System.out.println("\nAfter Deleting " + deleteKey + ":");
+        tree.printInorder(tree.root);
+    }
+}
